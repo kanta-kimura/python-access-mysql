@@ -1,30 +1,19 @@
-import MySQLdb
-
-import const
+from users import User
+import db_config
 
 
 def access_db():
     """DBにアクセスする
     """
 
-    conn = MySQLdb.connect(
-        host=const.HOST,
-        port=const.PORT,
-        user=const.USER,
-        passwd=const.PASSWORD,
-        db=const.DATABASE,
-        charset=const.CHARSET
-    )
+    session = db_config.session_local()
+    user = User(username='taro yamada', email='taro_yamada@example.com')
+    session.add(user)
+    session.commit()
 
-    cursor = conn.cursor()
-    cursor.execute('SELECT * FROM users')
-
-    rows = cursor.fetchall()
-    for row in rows:
-        print(row)
-
-    cursor.close()
-    conn.close()
+    users = session.query(User).all()
+    for user in users:
+        print(user)
 
 
 if __name__ == '__main__':
